@@ -1,0 +1,85 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="edu.ngd.order.equipment_management_system.mapper.EquipmentFaultCodeMapper">
+    
+    <!-- 结果映射 -->
+    <resultMap id="BaseResultMap" type="edu.ngd.order.equipment_management_system.entity.EquipmentFaultCode">
+        <id column="id" property="id" />
+        <result column="fault_code" property="faultCode" />
+        <result column="fault_name" property="faultName" />
+        <result column="fault_type" property="faultType" />
+        <result column="fault_description" property="faultDescription" />
+        <result column="handling_method" property="handlingMethod" />
+        <result column="create_time" property="createTime" />
+        <result column="update_time" property="updateTime" />
+    </resultMap>
+    
+    <!-- 基础字段列表 -->
+    <sql id="Base_Column_List">
+        id, fault_code, fault_name, fault_type, fault_description, handling_method, create_time, update_time
+    </sql>
+    
+    <!-- 插入语句 -->
+    <insert id="insert" parameterType="edu.ngd.order.equipment_management_system.entity.EquipmentFaultCode" useGeneratedKeys="true" keyProperty="id">
+        INSERT INTO equipment_fault_code (
+            fault_code, fault_name, fault_type, fault_description, handling_method, create_time, update_time
+        ) VALUES (
+            #{faultCode}, #{faultName}, #{faultType}, #{faultDescription}, #{handlingMethod}, NOW(), NOW()
+        )
+    </insert>
+    
+    <!-- 根据ID查询 -->
+    <select id="selectById" parameterType="java.lang.Long" resultMap="BaseResultMap">
+        SELECT <include refid="Base_Column_List" />
+        FROM equipment_fault_code
+        WHERE id = #{id}
+    </select>
+    
+    <!-- 查询列表 -->
+    <select id="selectList" parameterType="edu.ngd.order.equipment_management_system.entity.EquipmentFaultCode" resultMap="BaseResultMap">
+        SELECT <include refid="Base_Column_List" />
+        FROM equipment_fault_code
+        <where>
+            <if test="faultCode != null and faultCode != ''">
+                AND fault_code LIKE CONCAT('%', #{faultCode}, '%')
+            </if>
+            <if test="faultName != null and faultName != ''">
+                AND fault_name LIKE CONCAT('%', #{faultName}, '%')
+            </if>
+            <if test="faultType != null and faultType != ''">
+                AND fault_type = #{faultType}
+            </if>
+        </where>
+        ORDER BY fault_code ASC
+    </select>
+    
+    <!-- 更新语句 -->
+    <update id="updateById" parameterType="edu.ngd.order.equipment_management_system.entity.EquipmentFaultCode">
+        UPDATE equipment_fault_code
+        <set>
+            <if test="faultCode != null and faultCode != ''">
+                fault_code = #{faultCode},
+            </if>
+            <if test="faultName != null and faultName != ''">
+                fault_name = #{faultName},
+            </if>
+            <if test="faultType != null and faultType != ''">
+                fault_type = #{faultType},
+            </if>
+            <if test="faultDescription != null and faultDescription != ''">
+                fault_description = #{faultDescription},
+            </if>
+            <if test="handlingMethod != null and handlingMethod != ''">
+                handling_method = #{handlingMethod},
+            </if>
+            update_time = NOW()
+        </set>
+        WHERE id = #{id}
+    </update>
+    
+    <!-- 删除语句 -->
+    <delete id="deleteById" parameterType="java.lang.Long">
+        DELETE FROM equipment_fault_code
+        WHERE id = #{id}
+    </delete>
+</mapper>

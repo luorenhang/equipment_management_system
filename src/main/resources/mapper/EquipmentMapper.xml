@@ -1,0 +1,118 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="edu.ngd.order.equipment_management_system.mapper.EquipmentMapper">
+    
+    <!-- 结果映射 -->
+    <resultMap id="BaseResultMap" type="edu.ngd.order.equipment_management_system.entity.Equipment">
+        <id column="id" property="id" />
+        <result column="equipment_code" property="equipmentCode" />
+        <result column="equipment_name" property="equipmentName" />
+        <result column="equipment_type" property="equipmentType" />
+        <result column="model" property="model" />
+        <result column="manufacturer" property="manufacturer" />
+        <result column="purchase_date" property="purchaseDate" />
+        <result column="service_life" property="serviceLife" />
+        <result column="status" property="status" />
+        <result column="responsible_person" property="responsiblePerson" />
+        <result column="location" property="location" />
+        <result column="description" property="description" />
+        <result column="create_time" property="createTime" />
+        <result column="update_time" property="updateTime" />
+    </resultMap>
+    
+    <!-- 基础字段列表 -->
+    <sql id="Base_Column_List">
+        id, equipment_code, equipment_name, equipment_type, model, manufacturer, purchase_date, 
+        service_life, status, responsible_person, location, description, create_time, update_time
+    </sql>
+    
+    <!-- 插入语句 -->
+    <insert id="insert" parameterType="edu.ngd.order.equipment_management_system.entity.Equipment" useGeneratedKeys="true" keyProperty="id">
+        INSERT INTO equipment (
+            equipment_code, equipment_name, equipment_type, model, manufacturer, purchase_date, 
+            service_life, status, responsible_person, location, description, create_time, update_time
+        ) VALUES (
+            #{equipmentCode}, #{equipmentName}, #{equipmentType}, #{model}, #{manufacturer}, #{purchaseDate}, 
+            #{serviceLife}, #{status}, #{responsiblePerson}, #{location}, #{description}, NOW(), NOW()
+        )
+    </insert>
+    
+    <!-- 根据ID查询 -->
+    <select id="selectById" parameterType="java.lang.Long" resultMap="BaseResultMap">
+        SELECT <include refid="Base_Column_List" />
+        FROM equipment
+        WHERE id = #{id}
+    </select>
+    
+    <!-- 查询列表 -->
+    <select id="selectList" parameterType="edu.ngd.order.equipment_management_system.entity.Equipment" resultMap="BaseResultMap">
+        SELECT <include refid="Base_Column_List" />
+        FROM equipment
+        <where>
+            <if test="equipmentCode != null and equipmentCode != ''">
+                AND equipment_code LIKE CONCAT('%', #{equipmentCode}, '%')
+            </if>
+            <if test="equipmentName != null and equipmentName != ''">
+                AND equipment_name LIKE CONCAT('%', #{equipmentName}, '%')
+            </if>
+            <if test="equipmentType != null and equipmentType != ''">
+                AND equipment_type LIKE CONCAT('%', #{equipmentType}, '%')
+            </if>
+            <if test="status != null and status != ''">
+                AND status = #{status}
+            </if>
+            <if test="responsiblePerson != null and responsiblePerson != ''">
+                AND responsible_person LIKE CONCAT('%', #{responsiblePerson}, '%')
+            </if>
+        </where>
+        ORDER BY create_time DESC
+    </select>
+    
+    <!-- 更新语句 -->
+    <update id="updateById" parameterType="edu.ngd.order.equipment_management_system.entity.Equipment">
+        UPDATE equipment
+        <set>
+            <if test="equipmentCode != null and equipmentCode != ''">
+                equipment_code = #{equipmentCode},
+            </if>
+            <if test="equipmentName != null and equipmentName != ''">
+                equipment_name = #{equipmentName},
+            </if>
+            <if test="equipmentType != null and equipmentType != ''">
+                equipment_type = #{equipmentType},
+            </if>
+            <if test="model != null and model != ''">
+                model = #{model},
+            </if>
+            <if test="manufacturer != null and manufacturer != ''">
+                manufacturer = #{manufacturer},
+            </if>
+            <if test="purchaseDate != null">
+                purchase_date = #{purchaseDate},
+            </if>
+            <if test="serviceLife != null">
+                service_life = #{serviceLife},
+            </if>
+            <if test="status != null and status != ''">
+                status = #{status},
+            </if>
+            <if test="responsiblePerson != null and responsiblePerson != ''">
+                responsible_person = #{responsiblePerson},
+            </if>
+            <if test="location != null and location != ''">
+                location = #{location},
+            </if>
+            <if test="description != null and description != ''">
+                description = #{description},
+            </if>
+            update_time = NOW()
+        </set>
+        WHERE id = #{id}
+    </update>
+    
+    <!-- 删除语句 -->
+    <delete id="deleteById" parameterType="java.lang.Long">
+        DELETE FROM equipment
+        WHERE id = #{id}
+    </delete>
+</mapper>
