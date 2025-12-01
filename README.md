@@ -98,151 +98,203 @@
                 └─────────────────┘
 ## 3. 数据库设计
 
-### 3.1 设备表（equipment）
+### 3.1 数据库表结构概览
 
-| 字段名 | 数据类型 | 描述 | 约束 |
-|-------|---------|------|------|
-| id | BIGINT | 设备ID | PRIMARY KEY, AUTO_INCREMENT |
-| equipment_code | VARCHAR(50) | 设备编码 | UNIQUE, NOT NULL |
-| equipment_name | VARCHAR(100) | 设备名称 | NOT NULL |
-| equipment_type_id | BIGINT | 设备类型ID | FOREIGN KEY (equipment_type_id) REFERENCES equipment_type(id) |
-| model | VARCHAR(50) | 设备型号 | NOT NULL |
-| manufacturer | VARCHAR(100) | 制造商 | NOT NULL |
-| purchase_date | DATE | 购买日期 | NOT NULL |
-| service_life | INT | 使用寿命（月） | NOT NULL |
-| equipment_status_id | BIGINT | 设备状态ID | FOREIGN KEY (equipment_status_id) REFERENCES equipment_status(id) |
-| responsible_id | BIGINT | 责任人ID | FOREIGN KEY (responsible_id) REFERENCES responsible(id) |
-| location | VARCHAR(100) | 存放位置 | NOT NULL |
-| description | TEXT | 设备描述 | |
-| create_time | DATETIME | 创建时间 | DEFAULT CURRENT_TIMESTAMP |
-| update_time | DATETIME | 更新时间 | DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP |
+本系统采用MySQL数据库，设计了11张核心业务表，涵盖设备全生命周期管理。所有表均以`Cxr_`为前缀，确保命名规范统一。
 
-### 3.2 设备类型表（equipment_type）
+| 表名 | 中文名称 | 描述 |
+|------|----------|------|
+| BasicObject | 基础对象 | 系统基础表，存储所有对象的通用属性 |
+| Cxr_EquipmentLedger | 设备台账 | 存储设备的基本信息和状态 |
+| Cxr_EquipmentMaintain | 设备保养 | 记录设备保养计划和执行情况 |
+| Cxr_EquipmentRepair | 设备维修 | 记录设备故障维修的详细信息 |
+| Cxr_Check | 设备点检 | 记录设备点检计划和执行结果 |
+| Cxr_CheckProject | 设备点检项目 | 记录点检计划包含的具体项目 |
+| Cxr_MaintainProject | 保养项目 | 记录保养计划包含的具体项目 |
+| Cxr_CheckEquipment | 设备点检项目 | 定义设备的点检项目和标准 |
+| Cxr_EquipmentCode | 设备故障代码 | 定义设备故障的标准代码和描述 |
+| Cxr_Annex | 附件表 | 存储设备相关的附件信息 |
+| Cxr_PersonResponsible | 设备负责人 | 记录设备的责任人信息 |
 
-| 字段名 | 数据类型 | 描述 | 约束 |
-|-------|---------|------|------|
-| id | BIGINT | 设备类型ID | PRIMARY KEY, AUTO_INCREMENT |
-| equipment_type_name | VARCHAR(50) | 设备类型名称 | NOT NULL |
-| description | TEXT | 设备类型描述 | |
-| create_time | DATETIME | 创建时间 | DEFAULT CURRENT_TIMESTAMP |
-| update_time | DATETIME | 更新时间 | DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP |
+### 3.2 详细表结构设计
 
-3.3 设备状态表（equipment_status）
+#### 3.2.1 基础对象表（BasicObject）
 
-| 字段名 | 数据类型 | 描述 | 约束 |
-|-------|---------|------|------|
-| id | BIGINT | 设备状态ID | PRIMARY KEY, AUTO_INCREMENT |
-| equipment_status_name | VARCHAR(20) | 设备状态名称 | NOT NULL |
-| description | TEXT | 设备状态描述 | |
-| create_time | DATETIME | 创建时间 | DEFAULT CURRENT_TIMESTAMP |
-| update_time | DATETIME | 更新时间 | DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP |
+| 字段名 | 中文名称 | 数据类型 | 长度 | 描述 |
+|--------|----------|----------|------|------|
+| ID | 主键 | 整型 | - | 唯一标识符 |
+| Tenant | 租户 | 整型 | - | 租户ID |
+| RdmVersion | 系统版本 | 整型 | - | 数据版本号 |
+| RdmExtensionType | 实体 | 文本 | 50 | 实体类型 |
+| ClassName | 类名 | 文本 | 50 | 类名称 |
+| CreateTime | 创建时间 | 日期 | - | 记录创建时间 |
+| Creator | 创建人 | 文本 | 50 | 创建人姓名 |
+| LastUpdateTime | 最后更新时间 | 日期 | - | 记录最后更新时间 |
+| Modifier | 更新人 | 文本 | 50 | 最后更新人姓名 |
 
-3.4 责任人表（responsible）
+#### 3.2.2 设备台账表（Cxr_EquipmentLedger）
 
-| 字段名 | 数据类型 | 描述 | 约束 |
-|-------|---------|------|------|
-| id | BIGINT | 责任人ID | PRIMARY KEY, AUTO_INCREMENT |
-| responsible_name | VARCHAR(50) | 责任人姓名 | NOT NULL |
-| responsible_phone | VARCHAR(20) | 责任人电话 | NOT NULL |
-| responsible_email | VARCHAR(50) | 责任人邮箱 | |
-| create_time | DATETIME | 创建时间 | DEFAULT CURRENT_TIMESTAMP |
-| update_time | DATETIME | 更新时间 | DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP |
+| 字段名 | 中文名称 | 数据类型 | 长度 | 描述 |
+|--------|----------|----------|------|------|
+| ID | 主键 | 整型 | - | 唯一标识符 |
+| StorageLocation | 存放地点 | 文本 | - | 从数据字典取数(对象) |
+| Station | 工位 | 文本 | 30 | 设备所在工位 |
+| EquipmentName | 设备名称 | 文本 | 100 | 设备名称 |
+| EquipmentName | 部门 | 文本 | - | 从数据字典取数(对象) |
+| EquipmentNumber | 设备编号 | 文本 | 100 | 设备唯一编号 |
+| AssetNumber | 资产编号 | 文本 | 100 | 资产编号 |
+| ProductionLine | 产线 | 文本 | - | 从数据字典取数(对象) |
+| Notes | 备注 | 文本 | 100 | 备注信息 |
+| Status | 状态 | 文本 | 2 | 设备状态 |
+| WorkCenter | 工作中心 | 文本 | - | 从数据字典取数(对象) |
+| AutomaticData | 是否自动采集 | 文本 | 2 | 是否自动采集数据 |
+| Specification | 规格型号 | 文本 | 100 | 设备规格型号 |
+| DeviceType | 设备类型 | 文本 | - | 从数据字典取数(对象) |
+| EquipmentStatus | 设备状态 | 文本 | 2 | 设备运行状态 |
+| BarCode | 条码 | 文本 | 100 | 设备条码 |
 
-3.5 附件表（annex）
+#### 3.2.3 设备保养表（Cxr_EquipmentMaintain）
 
-| 字段名 | 数据类型 | 描述 | 约束 |
-|-------|---------|------|------|
-| id | BIGINT | 附件ID | PRIMARY KEY, AUTO_INCREMENT |
-| annex_name | VARCHAR(100) | 附件名称 | NOT NULL |
-| annex_url | VARCHAR(255) | 附件URL | NOT NULL |
-| annex_type | VARCHAR(20) | 附件类型 | NOT NULL |
-| business_id | BIGINT | 业务ID | NOT NULL |
-| business_type | VARCHAR(20) | 业务类型 | NOT NULL |
-| create_time | DATETIME | 创建时间 | DEFAULT CURRENT_TIMESTAMP |
-| update_time | DATETIME | 更新时间 | DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP |
+| 字段名 | 中文名称 | 数据类型 | 长度 | 描述 |
+|--------|----------|----------|------|------|
+| ID | 主键 | 整型 | - | 唯一标识符 |
+| MaintainNumber | 保养编号 | 文本 | 100 | 保养记录编号 |
+| EnableStatus | 启用状态 | 文本 | 2 | 是否启用 |
+| OperateEndTime | 操作结束时间 | 日期 | - | 实际操作结束时间 |
+| OperateStartTime | 操作开始时间 | 日期 | - | 实际操作开始时间 |
+| DeviceType | 设备类型 | 文本 | 100 | 设备类型 |
+| EquipmentNumber | 设备编号 | 文本 | 100 | 关联设备编号 |
+| MaintainUser | 保养人 | 文本 | 100 | 执行保养人员 |
+| Status | 状态 | 文本 | 2 | 保养记录状态 |
+| StartTime | 开始时间 | 日期 | - | 计划开始时间 |
+| EndTime | 结束时间 | 日期 | - | 计划结束时间 |
+| BarCode | 条码 | 文本 | 100 | 设备条码 |
+| MaintainResult | 保养结果 | 文本 | 10 | 保养执行结果 |
+| EquipmentName | 设备名称 | 文本 | 100 | 设备名称 |
+| MaintainDept | 责任部门 | 文本 | 100 | 责任部门 |
 
-3.6 设备故障代码表（equipment_fault_code）
+#### 3.2.4 设备维修表（Cxr_EquipmentRepair）
 
-| 字段名 | 数据类型 | 描述 | 约束 |
-|-------|---------|------|------|
-| id | BIGINT | 故障代码ID | PRIMARY KEY, AUTO_INCREMENT |
-| fault_code | VARCHAR(20) | 故障代码 | UNIQUE, NOT NULL |
-| fault_name | VARCHAR(100) | 故障名称 | NOT NULL |
-| fault_type | VARCHAR(50) | 故障类型 | NOT NULL |
-| fault_description | TEXT | 故障描述 | NOT NULL |
-| handling_method | TEXT | 处理方法 | NOT NULL |
-| create_time | DATETIME | 创建时间 | DEFAULT CURRENT_TIMESTAMP |
-| update_time | DATETIME | 更新时间 | DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP |
+| 字段名 | 中文名称 | 数据类型 | 长度 | 描述 |
+|--------|----------|----------|------|------|
+| ID | 主键 | 整型 | - | 唯一标识符 |
+| WorkTime | 派工时间 | 日期 | - | 派工时间 |
+| Urgency | 紧急程度 | 整型 | - | 维修紧急程度 |
+| RepairEndTime | 维修结束时间 | 日期 | - | 实际维修结束时间 |
+| RepairStartTime | 维修开始时间 | 日期 | - | 实际维修开始时间 |
+| RepairCode | 故障代码 | 文本 | 100 | 关联故障代码 |
+| faultDes | 故障描述 | 文本 | 225 | 故障详细描述 |
+| RepairResult | 是否修复 | 整型 | - | 修复状态 |
+| Status | 状态 | 整型 | - | 维修记录状态 |
+| EquipmentNumber | 设备编号 | 文本 | 100 | 关联设备编号 |
+| RepairStatus | 维修状态 | 整型 | - | 维修进度状态 |
+| BarCode | 维修条码 | 文本 | 100 | 维修记录条码 |
+| faultReason | 故障原因 | 文本 | 225 | 故障原因分析 |
+| RepairExplain | 维修情况说明 | 文本 | 225 | 维修过程说明 |
+| HandleMethod | 处理方式 | 文本 | 100 | 故障处理方式 |
+| RepairUser | 维修人员 | 文本 | 100 | 执行维修人员 |
+| EquipmentName | 设备名称 | 文本 | 100 | 设备名称 |
 
-3.7 设备巡检表（equipment_inspection）
+#### 3.2.5 设备点检表（Cxr_Check）
 
-| 字段名 | 数据类型 | 描述 | 约束 |
-|-------|---------|------|------|
-| id | BIGINT | 巡检ID | PRIMARY KEY, AUTO_INCREMENT |
-| equipment_id | BIGINT | 设备ID | FOREIGN KEY (equipment_id) REFERENCES equipment(id) |
-| inspection_date | DATETIME | 巡检日期 | NOT NULL |
-| inspector | VARCHAR(50) | 巡检人 | NOT NULL |
-| inspection_result | VARCHAR(20) | 巡检结果 | NOT NULL |
-| problem_description | TEXT | 问题描述 | |
-| handling_suggestion | TEXT | 处理建议 | |
-| create_time | DATETIME | 创建时间 | DEFAULT CURRENT_TIMESTAMP |
-| update_time | DATETIME | 更新时间 | DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP |
+| 字段名 | 中文名称 | 数据类型 | 长度 | 描述 |
+|--------|----------|----------|------|------|
+| ID | 主键 | 整型 | - | 唯一标识符 |
+| CheckNumber | 点检编号 | 文本 | 100 | 点检记录编号 |
+| EndTime | 计划结束时间 | 日期 | - | 计划点检结束时间 |
+| StartTime | 计划开始时间 | 日期 | - | 计划点检开始时间 |
+| OperateStartTime | 实际开始时间 | 日期 | - | 实际点检开始时间 |
+| OperateEndTime | 实际结束时间 | 日期 | - | 实际点检结束时间 |
+| EquipmentName | 设备名称 | 文本 | 100 | 设备名称 |
+| EquipmentNumber | 设备编号 | 文本 | 100 | 关联设备编号 |
+| DeviceType | 设备类型 | 文本 | 100 | 设备类型 |
+| CheckResult | 点检结果 | 文本 | 10 | 点检执行结果 |
+| CheckUser | 点检人 | 文本 | 100 | 执行点检人员 |
+| EnableStatus | 启用状态 | 文本 | 2 | 是否启用 |
+| BarCode | 条码 | 文本 | 100 | 设备条码 |
+| Status | 状态 | 文本 | 10 | 点检记录状态 |
 
-3.8 检查项目表（check_project）
+#### 3.2.6 设备点检项目表（Cxr_CheckProject）
 
-| 字段名 | 数据类型 | 描述 | 约束 |
-|-------|---------|------|------|
-| id | BIGINT | 检查项目ID | PRIMARY KEY, AUTO_INCREMENT |
-| equipment_inspection_id | BIGINT | 设备巡检ID | FOREIGN KEY (equipment_inspection_id) REFERENCES equipment_inspection(id) |
-| check_item | VARCHAR(100) | 检查项目 | NOT NULL |
-| check_result | VARCHAR(20) | 检查结果 | NOT NULL |
-| check_description | TEXT | 检查描述 | |
-| create_time | DATETIME | 创建时间 | DEFAULT CURRENT_TIMESTAMP |
-| update_time | DATETIME | 更新时间 | DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP |
+| 字段名 | 中文名称 | 数据类型 | 长度 | 描述 |
+|--------|----------|----------|------|------|
+| ID | 主键 | 整型 | - | 唯一标识符 |
+| CheckId | 点检ID | 整型 | - | 关联点检记录ID |
+| Reason | 原因 | 文本 | 225 | 异常原因 |
+| Remark | 备注 | 文本 | 225 | 备注信息 |
+| status | 状态 | 整型 | - | 项目状态 |
+| CheckProject | 点检项目 | 文本 | 225 | 点检项目名称 |
+| CheckContent | 点检内容 | 文本 | 225 | 点检具体内容 |
+| CheckResult | 点检结果 | 文本 | 10 | 点检结果 |
+| CheckStandard | 点检标准 | 文本 | 225 | 点检判断标准 |
 
-3.9 设备维护表（equipment_maintenance）
+#### 3.2.7 保养项目表（Cxr_MaintainProject）
 
-| 字段名 | 数据类型 | 描述 | 约束 |
-|-------|---------|------|------|
-| id | BIGINT | 维护ID | PRIMARY KEY, AUTO_INCREMENT |
-| equipment_id | BIGINT | 设备ID | FOREIGN KEY (equipment_id) REFERENCES equipment(id) |
-| maintenance_date | DATETIME | 维护日期 | NOT NULL |
-| maintenance_type | VARCHAR(50) | 维护类型 | NOT NULL |
-| maintenance_items | TEXT | 维护项目 | NOT NULL |
-| maintenance_person | VARCHAR(50) | 维护人 | NOT NULL |
-| maintenance_result | VARCHAR(20) | 维护结果 | NOT NULL |
-| next_maintenance_date | DATE | 下次维护日期 | NOT NULL |
-| description | TEXT | 维护描述 | |
-| create_time | DATETIME | 创建时间 | DEFAULT CURRENT_TIMESTAMP |
-| update_time | DATETIME | 更新时间 | DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP |
+| 字段名 | 中文名称 | 数据类型 | 长度 | 描述 |
+|--------|----------|----------|------|------|
+| ID | 主键 | 整型 | - | 唯一标识符 |
+| MaintainStandard | 保养标准 | 文本 | 225 | 保养执行标准 |
+| MaintainProject | 保养项目 | 文本 | 225 | 保养项目名称 |
+| MaintainResult | 保养结果 | 文本 | 225 | 保养执行结果 |
+| MaintainContent | 保养内容 | 文本 | 225 | 保养具体内容 |
+| Reason | 原因 | 文本 | 225 | 异常原因 |
+| MaintainId | 保养ID | 整型 | - | 关联保养记录ID |
+| Remark | 备注 | 文本 | 225 | 备注信息 |
 
-3.10 设备维修表（equipment_repair）
+#### 3.2.8 设备点检项目定义表（Cxr_CheckEquipment）
 
-| 字段名 | 数据类型 | 描述 | 约束 |
-|-------|---------|------|------|
-| id | BIGINT | 维修ID | PRIMARY KEY, AUTO_INCREMENT |
-| equipment_id | BIGINT | 设备ID | FOREIGN KEY (equipment_id) REFERENCES equipment(id) |
-| fault_code_id | BIGINT | 故障代码ID | FOREIGN KEY (fault_code_id) REFERENCES equipment_fault_code(id) |
-| repair_date | DATETIME | 维修日期 | NOT NULL |
-| repair_person | VARCHAR(50) | 维修人 | NOT NULL |
-| repair_items | TEXT | 维修项目 | NOT NULL |
-| repair_result | VARCHAR(20) | 维修结果 | NOT NULL |
-| repair_cost | DECIMAL(10,2) | 维修费用 | NOT NULL |
-| description | TEXT | 维修描述 | |
-| create_time | DATETIME | 创建时间 | DEFAULT CURRENT_TIMESTAMP |
-| update_time | DATETIME | 更新时间 | DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP |
+| 字段名 | 中文名称 | 数据类型 | 长度 | 描述 |
+|--------|----------|----------|------|------|
+| ID | 主键 | 整型 | - | 唯一标识符 |
+| CheckType | 点检类型 | 文本 | 100 | 点检类型 |
+| CheckContent | 点检内容 | 文本 | 225 | 点检具体内容 |
+| EquipmentId | 设备ID | 整型 | - | 关联设备ID |
+| CheckProject | 点检项目 | 文本 | 225 | 点检项目名称 |
+| CheckStandard | 点检标准 | 文本 | 225 | 点检判断标准 |
+| Remark | 备注 | 文本 | 225 | 备注信息 |
 
-3.11 设备维修配件表（equipment_repair_accessory）
+#### 3.2.9 设备故障代码表（Cxr_EquipmentCode）
 
-| 字段名 | 数据类型 | 描述 | 约束 |
-|-------|---------|------|------|
-| id | BIGINT | 维修配件ID | PRIMARY KEY, AUTO_INCREMENT |
-| equipment_repair_id | BIGINT | 设备维修ID | FOREIGN KEY (equipment_repair_id) REFERENCES equipment_repair(id) |
-| accessory_name | VARCHAR(100) | 配件名称 | NOT NULL |
-| accessory_quantity | INT | 配件数量 | NOT NULL |
-| accessory_cost | DECIMAL(10,2) | 配件单价 | NOT NULL |
-| create_time | DATETIME | 创建时间 | DEFAULT CURRENT_TIMESTAMP |
-| update_time | DATETIME | 更新时间 | DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP |
+| 字段名 | 中文名称 | 数据类型 | 长度 | 描述 |
+|--------|----------|----------|------|------|
+| ID | 主键 | 整型 | - | 唯一标识符 |
+| CodeDescribe | 故障描述 | 文本 | 225 | 故障详细描述 |
+| status | 状态 | 整型 | - | 代码状态 |
+| Code | 故障代码 | 文本 | 225 | 故障标准代码 |
+| CodeRemark | 备注 | 文本 | 225 | 备注信息 |
+
+#### 3.2.10 附件表（Cxr_Annex）
+
+| 字段名 | 中文名称 | 数据类型 | 长度 | 描述 |
+|--------|----------|----------|------|------|
+| ID | 主键 | 整型 | - | 唯一标识符 |
+| AnnexName | 附件名称 | 文本 | 225 | 附件文件名称 |
+| Notes | 备注 | 文本 | 225 | 备注信息 |
+| AnnexRemarks | 附件说明 | 文本 | 225 | 附件用途说明 |
+| EquipmentLedger | 设备台账ID | 整型 | - | 关联设备台账ID |
+| AnnexAddress | 附件地址 | 文本 | 2000 | 附件存储路径 |
+
+#### 3.2.11 设备负责人表（Cxr_PersonResponsible）
+
+| 字段名 | 中文名称 | 数据类型 | 长度 | 描述 |
+|--------|----------|----------|------|------|
+| ID | 主键 | 整型 | - | 唯一标识符 |
+| ResponsibleType | 责任人分类 | 文本 | 225 | 责任人类型 |
+| Notes | 备注 | 文本 | 225 | 备注信息 |
+| ResponsiblePerson | 责任人 | 文本 | 225 | 责任人姓名 |
+| EquipmentLedger | 设备台账ID | 整型 | - | 关联设备台账ID |
+
+### 3.3 表关系说明
+
+1. **设备台账与负责人关系**：一个设备可以有多个负责人，通过`Cxr_PersonResponsible.EquipmentLedger`关联`Cxr_EquipmentLedger.ID`
+2. **设备台账与附件关系**：一个设备可以有多个附件，通过`Cxr_Annex.EquipmentLedger`关联`Cxr_EquipmentLedger.ID`
+3. **设备与维修关系**：一个设备可以有多个维修记录，通过`Cxr_EquipmentRepair.EquipmentNumber`关联`Cxr_EquipmentLedger.EquipmentNumber`
+4. **设备与保养关系**：一个设备可以有多个保养记录，通过`Cxr_EquipmentMaintain.EquipmentNumber`关联`Cxr_EquipmentLedger.EquipmentNumber`
+5. **设备与点检关系**：一个设备可以有多个点检记录，通过`Cxr_Check.EquipmentNumber`关联`Cxr_EquipmentLedger.EquipmentNumber`
+6. **点检与点检项目关系**：一个点检记录包含多个点检项目，通过`Cxr_CheckProject.CheckId`关联`Cxr_Check.ID`
+7. **保养与保养项目关系**：一个保养记录包含多个保养项目，通过`Cxr_MaintainProject.MaintainId`关联`Cxr_EquipmentMaintain.ID`
+8. **设备与点检项目定义关系**：一个设备可以定义多个点检项目，通过`Cxr_CheckEquipment.EquipmentId`关联`Cxr_EquipmentLedger.ID`
+9. **维修与故障代码关系**：一个维修记录关联一个故障代码，通过`Cxr_EquipmentRepair.RepairCode`关联`Cxr_EquipmentCode.Code`
 4. 微服务代码结构设计
 
 4.1 父项目结构
