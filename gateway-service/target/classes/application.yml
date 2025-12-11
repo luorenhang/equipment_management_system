@@ -1,0 +1,75 @@
+server:
+  port: 8086
+
+spring:
+  application:
+    name: gateway-service
+  cloud:
+    nacos:
+      discovery:
+        server-addr: localhost:8848
+        username: nacos
+        password: nacos
+        namespace: public
+      config:
+        server-addr: localhost:8848
+        username: nacos
+        password: nacos
+        namespace: public
+        file-extension: yml
+    sentinel:
+      transport:
+        dashboard: localhost:8081
+        eager: true
+    gateway:
+      discovery:
+        locator:
+          enabled: true
+          lower-case-service-id: true
+      routes:
+        - id: equipment-service
+          uri: lb://equipment-service
+          predicates:
+            - Path=/api/equipment/**
+          filters:
+            - StripPrefix=0
+        - id: equipment-service-responsible
+          uri: lb://equipment-service
+          predicates:
+            - Path=/api/responsible/**
+          filters:
+            - StripPrefix=0
+        - id: equipment-fault-service
+          uri: lb://equipment-fault-service
+          predicates:
+            - Path=/api/fault-code/**
+          filters:
+            - StripPrefix=0
+        - id: equipment-inspection-service
+          uri: lb://equipment-inspection-service
+          predicates:
+            - Path=/api/inspection/**
+          filters:
+            - StripPrefix=0
+        - id: equipment-inspection-service-check-project
+          uri: lb://equipment-inspection-service
+          predicates:
+            - Path=/api/check-project/**
+          filters:
+            - StripPrefix=0
+        - id: equipment-maintenance-service
+          uri: lb://equipment-maintenance-service
+          predicates:
+            - Path=/api/maintenance/**
+          filters:
+            - StripPrefix=0
+        - id: equipment-repair-service
+          uri: lb://equipment-repair-service
+          predicates:
+            - Path=/api/repair/**
+          filters:
+            - StripPrefix=0
+
+logging:
+  level:
+    org.springframework.cloud.gateway: DEBUG

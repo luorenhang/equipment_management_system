@@ -1,0 +1,6 @@
+edu\ngd\order\equipment\maintenance\service\EquipmentMaintenanceService.class
+edu\ngd\order\equipment\maintenance\controller\EquipmentMaintenanceController.class
+edu\ngd\order\equipment\maintenance\mapper\EquipmentMaintenanceMapper.class
+edu\ngd\order\equipment\maintenance\EquipmentMaintenanceServiceApplication.class
+edu\ngd\order\equipment\maintenance\entity\MaintainProject.class
+edu\ngd\order\equipment\maintenance\entity\EquipmentMaintenance.class

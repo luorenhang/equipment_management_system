@@ -1,0 +1,87 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="edu.ngd.order.equipment.repair.mapper.EquipmentRepairMapper">
+    
+    <!-- 结果映射 -->
+    <resultMap id="BaseResultMap" type="edu.ngd.order.equipment.repair.entity.EquipmentRepair">
+        <id column="id" property="id" />
+        <result column="WorkTime" property="workTime" />
+        <result column="RepairCode" property="repairCode" />
+        <result column="FaultDes" property="faultDes" />
+        <result column="RepairResult" property="repairResult" />
+        <result column="Status" property="status" />
+        <result column="EquipmentNumber" property="equipmentNumber" />
+        <result column="RepairExplain" property="repairExplain" />
+        <result column="RepairUser" property="repairUser" />
+        <result column="EquipmentName" property="equipmentName" />
+    </resultMap>
+    
+    <!-- 基础字段列表 -->
+    <sql id="Base_Column_List">
+        id, WorkTime, RepairCode, FaultDes, RepairResult, Status, EquipmentNumber, 
+        RepairExplain, RepairUser, EquipmentName
+    </sql>
+    
+    <!-- 插入语句 -->
+    <insert id="insert" parameterType="edu.ngd.order.equipment.repair.entity.EquipmentRepair" useGeneratedKeys="true" keyProperty="id">
+        INSERT INTO Cxr_EquipmentRepair (
+            WorkTime, RepairCode, FaultDes, RepairResult, Status, EquipmentNumber, 
+            RepairExplain, RepairUser, EquipmentName
+        ) VALUES (
+            #{workTime}, #{repairCode}, #{faultDes}, #{repairResult}, #{status}, #{equipmentNumber}, 
+            #{repairExplain}, #{repairUser}, #{equipmentName}
+        )
+    </insert>
+    
+    <!-- 根据ID查询 -->
+    <select id="selectById" parameterType="java.lang.Integer" resultMap="BaseResultMap">
+        SELECT * FROM Cxr_EquipmentRepair
+        WHERE id = #{id}
+    </select>
+    
+    <!-- 查询列表 -->
+    <select id="selectList" parameterType="edu.ngd.order.equipment.repair.entity.EquipmentRepair" resultMap="BaseResultMap">
+        SELECT * FROM Cxr_EquipmentRepair
+    </select>
+    
+    <!-- 更新语句 -->
+    <update id="updateById" parameterType="edu.ngd.order.equipment.repair.entity.EquipmentRepair">
+        UPDATE Cxr_EquipmentRepair
+        <set>
+            <if test="workTime != null">
+                WorkTime = #{workTime},
+            </if>
+            <if test="repairCode != null and repairCode != ''">
+                RepairCode = #{repairCode},
+            </if>
+            <if test="faultDes != null and faultDes != ''">
+                FaultDes = #{faultDes},
+            </if>
+            <if test="repairResult != null">
+                RepairResult = #{repairResult},
+            </if>
+            <if test="status != null">
+                Status = #{status},
+            </if>
+            <if test="equipmentNumber != null and equipmentNumber != ''">
+                EquipmentNumber = #{equipmentNumber},
+            </if>
+            <if test="repairExplain != null and repairExplain != ''">
+                RepairExplain = #{repairExplain},
+            </if>
+            <if test="repairUser != null and repairUser != ''">
+                RepairUser = #{repairUser},
+            </if>
+            <if test="equipmentName != null and equipmentName != ''">
+                EquipmentName = #{equipmentName},
+            </if>
+        </set>
+        WHERE id = #{id}
+    </update>
+    
+    <!-- 删除语句 -->
+    <delete id="deleteById" parameterType="java.lang.Integer">
+        DELETE FROM Cxr_EquipmentRepair
+        WHERE id = #{id}
+    </delete>
+</mapper>

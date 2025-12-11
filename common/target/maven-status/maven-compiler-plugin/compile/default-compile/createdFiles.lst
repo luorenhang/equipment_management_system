@@ -1,0 +1,5 @@
+edu\ngd\order\common\result\Result.class
+edu\ngd\order\common\entity\BasicObject.class
+edu\ngd\order\common\exception\BusinessException.class
+edu\ngd\order\common\exception\GlobalExceptionHandler.class
+edu\ngd\order\common\result\ResultCode.class

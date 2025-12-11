@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="edu.ngd.order.equipment.maintenance.mapper.MaintenanceItemMapper">
+    
+    <!-- 结果映射 -->
+    <resultMap id="BaseResultMap" type="edu.ngd.order.equipment.maintenance.entity.MaintenanceItem">
+        <id column="ID" property="id" />
+        <result column="MaintenanceID" property="maintenanceId" />
+        <result column="MaintenanceItem" property="maintenanceItem" />
+        <result column="MaintenanceContent" property="maintenanceContent" />
+        <result column="MaintenanceResult" property="maintenanceResult" />
+        <result column="Remark" property="remark" />
+        <result column="Status" property="status" />
+    </resultMap>
+    
+    <!-- 基础字段列表 -->
+    <sql id="Base_Column_List">
+        ID, MaintenanceID, MaintenanceItem, MaintenanceContent, 
+        MaintenanceResult, Remark, Status
+    </sql>
+    
+    <!-- 插入语句 -->
+    <insert id="insert" parameterType="edu.ngd.order.equipment.maintenance.entity.MaintenanceItem" useGeneratedKeys="true" keyProperty="id">
+        INSERT INTO Cxr_EquipmentMaintainItem (
+            MaintenanceID, MaintenanceItem, MaintenanceContent, 
+            MaintenanceResult, Remark, Status
+        ) VALUES (
+            #{maintenanceId}, #{maintenanceItem}, #{maintenanceContent}, 
+            #{maintenanceResult}, #{remark}, #{status}
+        )
+    </insert>
+    
+    <!-- 批量插入语句 -->
+    <insert id="insertBatch" parameterType="java.util.List">
+        INSERT INTO Cxr_EquipmentMaintainItem (
+            MaintenanceID, MaintenanceItem, MaintenanceContent, 
+            MaintenanceResult, Remark, Status
+        ) VALUES
+        <foreach collection="list" item="item" separator=",">
+            (
+                #{item.maintenanceId}, #{item.maintenanceItem}, #{item.maintenanceContent}, 
+                #{item.maintenanceResult}, #{item.remark}, #{item.status}
+            )
+        </foreach>
+    </insert>
+    
+    <!-- 根据保养记录ID查询 -->
+    <select id="selectByMaintenanceId" parameterType="java.lang.Integer" resultMap="BaseResultMap">
+        SELECT <include refid="Base_Column_List" />
+        FROM Cxr_EquipmentMaintainItem
+        WHERE MaintenanceID = #{maintenanceId}
+    </select>
+    
+    <!-- 根据保养记录ID删除 -->
+    <delete id="deleteByMaintenanceId" parameterType="java.lang.Integer">
+        DELETE FROM Cxr_EquipmentMaintainItem
+        WHERE MaintenanceID = #{maintenanceId}
+    </delete>
+</mapper>

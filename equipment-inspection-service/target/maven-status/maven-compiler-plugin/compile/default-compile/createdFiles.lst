@@ -1,0 +1,10 @@
+edu\ngd\order\equipment\inspection\mapper\EquipmentInspectionMapper.class
+edu\ngd\order\equipment\inspection\service\EquipmentInspectionService.class
+edu\ngd\order\equipment\inspection\EquipmentInspectionServiceApplication.class
+edu\ngd\order\equipment\inspection\service\CheckProjectService.class
+edu\ngd\order\equipment\inspection\controller\CheckProjectController.class
+edu\ngd\order\equipment\inspection\entity\CheckProject.class
+edu\ngd\order\equipment\inspection\entity\EquipmentInspection.class
+edu\ngd\order\equipment\inspection\controller\EquipmentInspectionController.class
+edu\ngd\order\equipment\inspection\mapper\CheckProjectMapper.class
+edu\ngd\order\equipment\inspection\entity\CheckEquipment.class

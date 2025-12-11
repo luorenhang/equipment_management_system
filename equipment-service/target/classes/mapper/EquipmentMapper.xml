@@ -1,0 +1,92 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="edu.ngd.order.equipment.mapper.EquipmentMapper">
+    
+    <!-- 结果映射 -->
+    <resultMap id="BaseResultMap" type="edu.ngd.order.equipment.entity.Equipment">
+        <id column="ID" property="id" />
+        <result column="StorageLocation" property="storageLocation" />
+        <result column="EquipmentName" property="equipmentName" />
+        <result column="EquipmentNumber" property="equipmentNumber" />
+        <result column="ProductionLine" property="productionLine" />
+        <result column="Status" property="status" />
+        <result column="DeviceType" property="deviceType" />
+        <result column="EquipmentStatus" property="equipmentStatus" />
+    </resultMap>
+    
+    <!-- 基础字段列表 -->
+    <sql id="Base_Column_List">
+        ID, StorageLocation, EquipmentName, EquipmentNumber, ProductionLine, Status, DeviceType, EquipmentStatus
+    </sql>
+    
+    <!-- 插入语句 -->
+    <insert id="insert" parameterType="edu.ngd.order.equipment.entity.Equipment" useGeneratedKeys="true" keyProperty="id">
+        INSERT INTO Cxr_EquipmentLedger (
+            StorageLocation, EquipmentName, EquipmentNumber, ProductionLine, Status, DeviceType, EquipmentStatus
+        ) VALUES (
+            #{storageLocation}, #{equipmentName}, #{equipmentNumber}, #{productionLine}, #{status}, #{deviceType}, #{equipmentStatus}
+        )
+    </insert>
+    
+    <!-- 根据ID查询 -->
+    <select id="selectById" parameterType="java.lang.Integer" resultMap="BaseResultMap">
+        SELECT <include refid="Base_Column_List" />
+        FROM Cxr_EquipmentLedger
+        WHERE ID = #{id}
+    </select>
+    
+    <!-- 查询列表 -->
+    <select id="selectList" parameterType="edu.ngd.order.equipment.entity.Equipment" resultMap="BaseResultMap">
+        SELECT <include refid="Base_Column_List" />
+        FROM Cxr_EquipmentLedger
+        <where>
+            <if test="equipmentNumber != null and equipmentNumber != ''">
+                AND EquipmentNumber LIKE CONCAT('%', #{equipmentNumber}, '%')
+            </if>
+            <if test="equipmentName != null and equipmentName != ''">
+                AND EquipmentName LIKE CONCAT('%', #{equipmentName}, '%')
+            </if>
+            <if test="deviceType != null and deviceType != ''">
+                AND DeviceType LIKE CONCAT('%', #{deviceType}, '%')
+            </if>
+            <if test="status != null and status != ''">
+                AND Status = #{status}
+            </if>
+        </where>
+    </select>
+    
+    <!-- 更新语句 -->
+    <update id="updateById" parameterType="edu.ngd.order.equipment.entity.Equipment">
+        UPDATE Cxr_EquipmentLedger
+        <set>
+            <if test="storageLocation != null and storageLocation != ''">
+                StorageLocation = #{storageLocation},
+            </if>
+            <if test="equipmentName != null and equipmentName != ''">
+                EquipmentName = #{equipmentName},
+            </if>
+            <if test="equipmentNumber != null and equipmentNumber != ''">
+                EquipmentNumber = #{equipmentNumber},
+            </if>
+            <if test="productionLine != null and productionLine != ''">
+                ProductionLine = #{productionLine},
+            </if>
+            <if test="status != null and status != ''">
+                Status = #{status},
+            </if>
+            <if test="deviceType != null and deviceType != ''">
+                DeviceType = #{deviceType},
+            </if>
+            <if test="equipmentStatus != null and equipmentStatus != ''">
+                EquipmentStatus = #{equipmentStatus},
+            </if>
+        </set>
+        WHERE ID = #{id}
+    </update>
+    
+    <!-- 删除语句 -->
+    <delete id="deleteById" parameterType="java.lang.Integer">
+        DELETE FROM Cxr_EquipmentLedger
+        WHERE ID = #{id}
+    </delete>
+</mapper>

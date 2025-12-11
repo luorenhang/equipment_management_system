@@ -1,0 +1,10 @@
+edu\ngd\order\equipment\service\ResponsibleService.class
+edu\ngd\order\equipment\mapper\ResponsibleMapper.class
+edu\ngd\order\equipment\service\EquipmentService.class
+edu\ngd\order\equipment\controller\ResponsibleController.class
+edu\ngd\order\equipment\entity\Equipment.class
+edu\ngd\order\equipment\entity\Annex.class
+edu\ngd\order\equipment\controller\EquipmentController.class
+edu\ngd\order\equipment\mapper\EquipmentMapper.class
+edu\ngd\order\equipment\EquipmentServiceApplication.class
+edu\ngd\order\equipment\entity\Responsible.class

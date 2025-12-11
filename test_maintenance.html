@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>设备保养测试</title>
+    <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+</head>
+<body>
+    <h1>设备保养测试</h1>
+    <button onclick="testCreateMaintenance()">创建设备保养</button>
+    <div id="result"></div>
+    
+    <script>
+        async function testCreateMaintenance() {
+            const resultDiv = document.getElementById('result');
+            resultDiv.innerHTML = '测试中...';
+            
+            try {
+                // 准备测试数据
+                const maintenanceData = {
+                    maintenanceNumber: 'TEST001',
+                    equipmentName: '测试设备',
+                    equipmentNumber: 'EQ001',
+                    deviceType: '类型1',
+                    maintenancePerson: '测试人员',
+                    maintenanceTime: new Date().toISOString(),
+                    status: '待执行',
+                    maintenanceItemList: [
+                        {
+                            maintenanceItem: '测试项目1',
+                            maintenanceContent: '测试内容1',
+                            maintenanceResult: '合格',
+                            remark: '测试备注1',
+                            status: 1
+                        }
+                    ]
+                };
+                
+                // 发送请求到设备保养服务
+                const response = await axios.post('http://localhost:8084/api/maintenance', maintenanceData);
+                
+                resultDiv.innerHTML = `<h3>测试成功！</h3><p>返回结果：${JSON.stringify(response.data)}</p>`;
+            } catch (error) {
+                resultDiv.innerHTML = `<h3>测试失败！</h3><p>错误信息：${error.message}</p><p>详细信息：${JSON.stringify(error.response?.data || {})}</p>`;
+            }
+        }
+    </script>
+</body>
+</html>

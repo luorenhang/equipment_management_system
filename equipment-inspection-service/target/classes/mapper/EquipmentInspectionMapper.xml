@@ -1,0 +1,123 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="edu.ngd.order.equipment.inspection.mapper.EquipmentInspectionMapper">
+    
+    <!-- 结果映射 -->
+    <resultMap id="BaseResultMap" type="edu.ngd.order.equipment.inspection.entity.EquipmentInspection">
+        <id column="ID" property="id" />
+        <result column="CheckNumber" property="checkNumber" />
+        <result column="EndTime" property="endTime" />
+        <result column="StartTime" property="startTime" />
+        <result column="OperateStartTime" property="operateStartTime" />
+        <result column="OperateEndTime" property="operateEndTime" />
+        <result column="EquipmentName" property="equipmentName" />
+        <result column="EquipmentNumber" property="equipmentNumber" />
+        <result column="DeviceType" property="deviceType" />
+        <result column="CheckResult" property="checkResult" />
+        <result column="CheckUser" property="checkUser" />
+        <result column="EnableStatus" property="enableStatus" />
+        <result column="BarCode" property="barCode" />
+        <result column="Status" property="status" />
+    </resultMap>
+    
+    <!-- 基础字段列表 -->
+    <sql id="Base_Column_List">
+        ID, CheckNumber, EndTime, StartTime, OperateStartTime, OperateEndTime, 
+        EquipmentName, EquipmentNumber, DeviceType, CheckResult, CheckUser, 
+        EnableStatus, BarCode, Status
+    </sql>
+    
+    <!-- 插入语句 -->
+    <insert id="insert" parameterType="edu.ngd.order.equipment.inspection.entity.EquipmentInspection" useGeneratedKeys="true" keyProperty="id">
+        INSERT INTO Cxr_Check (
+            CheckNumber, EndTime, StartTime, OperateStartTime, OperateEndTime, 
+            EquipmentName, EquipmentNumber, DeviceType, CheckResult, CheckUser, 
+            EnableStatus, BarCode, Status
+        ) VALUES (
+            #{checkNumber}, #{endTime}, #{startTime}, #{operateStartTime}, #{operateEndTime}, 
+            #{equipmentName}, #{equipmentNumber}, #{deviceType}, #{checkResult}, #{checkUser}, 
+            #{enableStatus}, #{barCode}, #{status}
+        )
+    </insert>
+    
+    <!-- 根据ID查询 -->
+    <select id="selectById" parameterType="java.lang.Integer" resultMap="BaseResultMap">
+        SELECT <include refid="Base_Column_List" />
+        FROM Cxr_Check
+        WHERE ID = #{id}
+    </select>
+    
+    <!-- 查询列表 -->
+    <select id="selectList" parameterType="edu.ngd.order.equipment.inspection.entity.EquipmentInspection" resultMap="BaseResultMap">
+        SELECT <include refid="Base_Column_List" />
+        FROM Cxr_Check
+        <where>
+            <if test="equipmentNumber != null and equipmentNumber != ''">
+                AND EquipmentNumber LIKE CONCAT('%', #{equipmentNumber}, '%')
+            </if>
+            <if test="equipmentName != null and equipmentName != ''">
+                AND EquipmentName LIKE CONCAT('%', #{equipmentName}, '%')
+            </if>
+            <if test="checkUser != null and checkUser != ''">
+                AND CheckUser LIKE CONCAT('%', #{checkUser}, '%')
+            </if>
+            <if test="checkResult != null and checkResult != ''">
+                AND CheckResult = #{checkResult}
+            </if>
+        </where>
+        ORDER BY StartTime DESC
+    </select>
+    
+    <!-- 更新语句 -->
+    <update id="updateById" parameterType="edu.ngd.order.equipment.inspection.entity.EquipmentInspection">
+        UPDATE Cxr_Check
+        <set>
+            <if test="checkNumber != null and checkNumber != ''">
+                CheckNumber = #{checkNumber},
+            </if>
+            <if test="endTime != null">
+                EndTime = #{endTime},
+            </if>
+            <if test="startTime != null">
+                StartTime = #{startTime},
+            </if>
+            <if test="operateStartTime != null">
+                OperateStartTime = #{operateStartTime},
+            </if>
+            <if test="operateEndTime != null">
+                OperateEndTime = #{operateEndTime},
+            </if>
+            <if test="equipmentName != null and equipmentName != ''">
+                EquipmentName = #{equipmentName},
+            </if>
+            <if test="equipmentNumber != null and equipmentNumber != ''">
+                EquipmentNumber = #{equipmentNumber},
+            </if>
+            <if test="deviceType != null and deviceType != ''">
+                DeviceType = #{deviceType},
+            </if>
+            <if test="checkResult != null and checkResult != ''">
+                CheckResult = #{checkResult},
+            </if>
+            <if test="checkUser != null and checkUser != ''">
+                CheckUser = #{checkUser},
+            </if>
+            <if test="enableStatus != null and enableStatus != ''">
+                EnableStatus = #{enableStatus},
+            </if>
+            <if test="barCode != null and barCode != ''">
+                BarCode = #{barCode},
+            </if>
+            <if test="status != null and status != ''">
+                Status = #{status},
+            </if>
+        </set>
+        WHERE ID = #{id}
+    </update>
+    
+    <!-- 删除语句 -->
+    <delete id="deleteById" parameterType="java.lang.Integer">
+        DELETE FROM Cxr_Check
+        WHERE ID = #{id}
+    </delete>
+</mapper>

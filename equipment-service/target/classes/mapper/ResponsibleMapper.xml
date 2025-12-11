@@ -1,0 +1,90 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="edu.ngd.order.equipment.mapper.ResponsibleMapper">
+    
+    <!-- 结果映射 -->
+    <resultMap id="BaseResultMap" type="edu.ngd.order.equipment.entity.Responsible">
+        <id column="ID" property="id" />
+        <result column="ResponsibleType" property="responsibleType" />
+        <result column="Notes" property="notes" />
+        <result column="ResponsiblePerson" property="responsiblePerson" />
+        <result column="EquipmentLedger" property="equipmentLedger" />
+    </resultMap>
+    
+    <!-- 基础字段列表 -->
+    <sql id="Base_Column_List">
+        ID, ResponsibleType, Notes, ResponsiblePerson, EquipmentLedger
+    </sql>
+    
+    <!-- 插入语句 -->
+    <insert id="insert" parameterType="edu.ngd.order.equipment.entity.Responsible" useGeneratedKeys="true" keyProperty="id">
+        INSERT INTO Cxr_Responsible (
+            ResponsibleType, Notes, ResponsiblePerson, EquipmentLedger
+        ) VALUES (
+            #{responsibleType}, #{notes}, #{responsiblePerson}, #{equipmentLedger}
+        )
+    </insert>
+    
+    <!-- 根据ID查询 -->
+    <select id="selectById" parameterType="java.lang.Integer" resultMap="BaseResultMap">
+        SELECT <include refid="Base_Column_List" />
+        FROM Cxr_Responsible
+        WHERE ID = #{id}
+    </select>
+    
+    <!-- 查询列表 -->
+    <select id="selectList" parameterType="edu.ngd.order.equipment.entity.Responsible" resultMap="BaseResultMap">
+        SELECT <include refid="Base_Column_List" />
+        FROM Cxr_Responsible
+        <where>
+            <if test="responsibleType != null and responsibleType != ''">
+                AND ResponsibleType LIKE CONCAT('%', #{responsibleType}, '%')
+            </if>
+            <if test="responsiblePerson != null and responsiblePerson != ''">
+                AND ResponsiblePerson LIKE CONCAT('%', #{responsiblePerson}, '%')
+            </if>
+            <if test="equipmentLedger != null">
+                AND EquipmentLedger = #{equipmentLedger}
+            </if>
+        </where>
+    </select>
+    
+    <!-- 根据设备ID查询 -->
+    <select id="selectByEquipmentId" parameterType="java.lang.Integer" resultMap="BaseResultMap">
+        SELECT <include refid="Base_Column_List" />
+        FROM Cxr_Responsible
+        WHERE EquipmentLedger = #{equipmentLedger}
+    </select>
+    
+    <!-- 更新语句 -->
+    <update id="updateById" parameterType="edu.ngd.order.equipment.entity.Responsible">
+        UPDATE Cxr_Responsible
+        <set>
+            <if test="responsibleType != null and responsibleType != ''">
+                ResponsibleType = #{responsibleType},
+            </if>
+            <if test="notes != null and notes != ''">
+                Notes = #{notes},
+            </if>
+            <if test="responsiblePerson != null and responsiblePerson != ''">
+                ResponsiblePerson = #{responsiblePerson},
+            </if>
+            <if test="equipmentLedger != null">
+                EquipmentLedger = #{equipmentLedger},
+            </if>
+        </set>
+        WHERE ID = #{id}
+    </update>
+    
+    <!-- 根据ID删除 -->
+    <delete id="deleteById" parameterType="java.lang.Integer">
+        DELETE FROM Cxr_Responsible
+        WHERE ID = #{id}
+    </delete>
+    
+    <!-- 根据设备ID删除 -->
+    <delete id="deleteByEquipmentId" parameterType="java.lang.Integer">
+        DELETE FROM Cxr_Responsible
+        WHERE EquipmentLedger = #{equipmentLedger}
+    </delete>
+</mapper>

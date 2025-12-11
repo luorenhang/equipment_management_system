@@ -1,0 +1,78 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="edu.ngd.order.equipment.fault.mapper.EquipmentFaultCodeMapper">
+    
+    <!-- 结果映射 -->
+    <resultMap id="BaseResultMap" type="edu.ngd.order.equipment.fault.entity.EquipmentFaultCode">
+        <id column="ID" property="id" />
+        <result column="CodeDescribe" property="codeDescribe" />
+        <result column="Status" property="status" />
+        <result column="Code" property="code" />
+        <result column="CodeRemark" property="codeRemark" />
+    </resultMap>
+    
+    <!-- 基础字段列表 -->
+    <sql id="Base_Column_List">
+        ID, CodeDescribe, Status, Code, CodeRemark
+    </sql>
+    
+    <!-- 插入语句 -->
+    <insert id="insert" parameterType="edu.ngd.order.equipment.fault.entity.EquipmentFaultCode" useGeneratedKeys="true" keyProperty="id">
+        INSERT INTO Cxr_EquipmentCode (
+            CodeDescribe, Status, Code, CodeRemark
+        ) VALUES (
+            #{codeDescribe}, #{status}, #{code}, #{codeRemark}
+        )
+    </insert>
+    
+    <!-- 根据ID查询 -->
+    <select id="selectById" parameterType="java.lang.Integer" resultMap="BaseResultMap">
+        SELECT <include refid="Base_Column_List" />
+        FROM Cxr_EquipmentCode
+        WHERE ID = #{id}
+    </select>
+    
+    <!-- 查询列表 -->
+    <select id="selectList" parameterType="edu.ngd.order.equipment.fault.entity.EquipmentFaultCode" resultMap="BaseResultMap">
+        SELECT <include refid="Base_Column_List" />
+        FROM Cxr_EquipmentCode
+        <where>
+            <if test="code != null and code != ''">
+                AND Code LIKE CONCAT('%', #{code}, '%')
+            </if>
+            <if test="codeDescribe != null and codeDescribe != ''">
+                AND CodeDescribe LIKE CONCAT('%', #{codeDescribe}, '%')
+            </if>
+            <if test="status != null">
+                AND Status = #{status}
+            </if>
+        </where>
+        ORDER BY Code ASC
+    </select>
+    
+    <!-- 更新语句 -->
+    <update id="updateById" parameterType="edu.ngd.order.equipment.fault.entity.EquipmentFaultCode">
+        UPDATE Cxr_EquipmentCode
+        <set>
+            <if test="codeDescribe != null and codeDescribe != ''">
+                CodeDescribe = #{codeDescribe},
+            </if>
+            <if test="status != null">
+                Status = #{status},
+            </if>
+            <if test="code != null and code != ''">
+                Code = #{code},
+            </if>
+            <if test="codeRemark != null and codeRemark != ''">
+                CodeRemark = #{codeRemark},
+            </if>
+        </set>
+        WHERE ID = #{id}
+    </update>
+    
+    <!-- 删除语句 -->
+    <delete id="deleteById" parameterType="java.lang.Integer">
+        DELETE FROM Cxr_EquipmentCode
+        WHERE ID = #{id}
+    </delete>
+</mapper>

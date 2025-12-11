@@ -1,0 +1,5 @@
+edu\ngd\order\equipment\repair\controller\EquipmentRepairController.class
+edu\ngd\order\equipment\repair\EquipmentRepairServiceApplication.class
+edu\ngd\order\equipment\repair\entity\EquipmentRepair.class
+edu\ngd\order\equipment\repair\service\EquipmentRepairService.class
+edu\ngd\order\equipment\repair\mapper\EquipmentRepairMapper.class

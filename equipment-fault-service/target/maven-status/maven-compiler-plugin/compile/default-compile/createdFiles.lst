@@ -1,0 +1,5 @@
+edu\ngd\order\equipment\fault\mapper\EquipmentFaultCodeMapper.class
+edu\ngd\order\equipment\fault\entity\EquipmentFaultCode.class
+edu\ngd\order\equipment\fault\controller\EquipmentFaultCodeController.class
+edu\ngd\order\equipment\fault\service\EquipmentFaultCodeService.class
+edu\ngd\order\equipment\fault\EquipmentFaultServiceApplication.class

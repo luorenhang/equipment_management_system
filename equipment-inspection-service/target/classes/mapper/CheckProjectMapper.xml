@@ -1,0 +1,106 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="edu.ngd.order.equipment.inspection.mapper.CheckProjectMapper">
+    
+    <!-- 结果映射 -->
+    <resultMap id="BaseResultMap" type="edu.ngd.order.equipment.inspection.entity.CheckProject">
+        <id column="ID" property="id" />
+        <result column="CheckId" property="checkId" />
+        <result column="Reason" property="reason" />
+        <result column="Remark" property="remark" />
+        <result column="Status" property="status" />
+        <result column="CheckProject" property="checkProject" />
+        <result column="CheckContent" property="checkContent" />
+        <result column="CheckResult" property="checkResult" />
+        <result column="CheckStandard" property="checkStandard" />
+    </resultMap>
+    
+    <!-- 基础字段列表 -->
+    <sql id="Base_Column_List">
+        ID, CheckId, Reason, Remark, Status, CheckProject, CheckContent, CheckResult, CheckStandard
+    </sql>
+    
+    <!-- 插入语句 -->
+    <insert id="insert" parameterType="edu.ngd.order.equipment.inspection.entity.CheckProject" useGeneratedKeys="true" keyProperty="id">
+        INSERT INTO Cxr_CheckProject (
+            CheckId, Reason, Remark, Status, CheckProject, CheckContent, CheckResult, CheckStandard
+        ) VALUES (
+            #{checkId}, #{reason}, #{remark}, #{status}, #{checkProject}, #{checkContent}, #{checkResult}, #{checkStandard}
+        )
+    </insert>
+    
+    <!-- 根据ID查询 -->
+    <select id="selectById" parameterType="java.lang.Integer" resultMap="BaseResultMap">
+        SELECT <include refid="Base_Column_List" />
+        FROM Cxr_CheckProject
+        WHERE ID = #{id}
+    </select>
+    
+    <!-- 查询列表 -->
+    <select id="selectList" parameterType="edu.ngd.order.equipment.inspection.entity.CheckProject" resultMap="BaseResultMap">
+        SELECT <include refid="Base_Column_List" />
+        FROM Cxr_CheckProject
+        <where>
+            <if test="checkId != null">
+                AND CheckId = #{checkId}
+            </if>
+            <if test="checkProject != null and checkProject != ''">
+                AND CheckProject LIKE CONCAT('%', #{checkProject}, '%')
+            </if>
+            <if test="status != null">
+                AND Status = #{status}
+            </if>
+        </where>
+    </select>
+    
+    <!-- 根据点检ID查询 -->
+    <select id="selectByCheckId" parameterType="java.lang.Integer" resultMap="BaseResultMap">
+        SELECT <include refid="Base_Column_List" />
+        FROM Cxr_CheckProject
+        WHERE CheckId = #{checkId}
+    </select>
+    
+    <!-- 更新语句 -->
+    <update id="updateById" parameterType="edu.ngd.order.equipment.inspection.entity.CheckProject">
+        UPDATE Cxr_CheckProject
+        <set>
+            <if test="checkId != null">
+                CheckId = #{checkId},
+            </if>
+            <if test="reason != null and reason != ''">
+                Reason = #{reason},
+            </if>
+            <if test="remark != null and remark != ''">
+                Remark = #{remark},
+            </if>
+            <if test="status != null">
+                Status = #{status},
+            </if>
+            <if test="checkProject != null and checkProject != ''">
+                CheckProject = #{checkProject},
+            </if>
+            <if test="checkContent != null and checkContent != ''">
+                CheckContent = #{checkContent},
+            </if>
+            <if test="checkResult != null and checkResult != ''">
+                CheckResult = #{checkResult},
+            </if>
+            <if test="checkStandard != null and checkStandard != ''">
+                CheckStandard = #{checkStandard},
+            </if>
+        </set>
+        WHERE ID = #{id}
+    </update>
+    
+    <!-- 根据ID删除 -->
+    <delete id="deleteById" parameterType="java.lang.Integer">
+        DELETE FROM Cxr_CheckProject
+        WHERE ID = #{id}
+    </delete>
+    
+    <!-- 根据点检ID删除 -->
+    <delete id="deleteByCheckId" parameterType="java.lang.Integer">
+        DELETE FROM Cxr_CheckProject
+        WHERE CheckId = #{checkId}
+    </delete>
+</mapper>
