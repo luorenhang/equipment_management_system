@@ -197,7 +197,7 @@ const handleLogin = async () => {
 /* 登录卡片 */
 .login-card {
   width: 100%;
-  max-width: 420px;
+  max-width: 500px;
   border-radius: 16px;
   overflow: hidden;
   box-shadow: 0 10px 40px rgba(0, 0, 0, 0.2);
@@ -207,17 +207,6 @@ const handleLogin = async () => {
   transition: all 0.3s ease;
   z-index: 10;
   animation: slideUp 0.5s ease-out;
-}
-
-@keyframes slideUp {
-  from {
-    opacity: 0;
-    transform: translateY(30px);
-  }
-  to {
-    opacity: 1;
-    transform: translateY(0);
-  }
 }
 
 /* 登录卡片悬停效果 */
@@ -270,11 +259,6 @@ const handleLogin = async () => {
   font-weight: 300;
 }
 
-/* 登录表单 */
-.login-form {
-  padding: 0 30px 30px;
-}
-
 /* 表单项样式 */
 .el-form-item {
   margin-bottom: 20px;
@@ -314,12 +298,16 @@ const handleLogin = async () => {
   background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
   border: none;
   border-radius: 10px;
-  padding: 12px 0;
-  font-size: 16px;
+  padding: 15px 0;
+  font-size: 18px;
   font-weight: 600;
   letter-spacing: 1px;
   transition: all 0.3s ease;
   box-shadow: 0 4px 15px rgba(102, 126, 234, 0.4);
+  width: 100%;
+  max-width: 420px;
+  margin: 0 auto;
+  display: block;
 }
 
 .login-button:hover {
