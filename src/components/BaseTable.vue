@@ -56,32 +56,37 @@
           </template>
         </el-table-column>
       </template>
-      <el-table-column label="操作" width="200" fixed="right">
+      <el-table-column label="操作" width="240" fixed="right">
         <template #default="scope">
-          <el-button
-            v-if="hasPermission('view')"
-            type="primary"
-            size="small"
-            @click="handleView(scope.row.id)"
-          >
-            <el-icon><View /></el-icon>查看
-          </el-button>
-          <el-button
-            v-if="hasPermission('edit')"
-            type="warning"
-            size="small"
-            @click="handleEdit(scope.row.id)"
-          >
-            <el-icon><Edit /></el-icon>编辑
-          </el-button>
-          <el-button
-            v-if="hasPermission('delete')"
-            type="danger"
-            size="small"
-            @click="handleDelete(scope.row.id)"
-          >
-            <el-icon><Delete /></el-icon>删除
-          </el-button>
+          <div class="operation-buttons">
+            <el-button
+              v-if="hasPermission('view')"
+              type="primary"
+              size="small"
+              @click="handleView(scope.row.id)"
+              class="view-btn"
+            >
+              <el-icon><View /></el-icon>查看
+            </el-button>
+            <el-button
+              v-if="hasPermission('edit')"
+              type="warning"
+              size="small"
+              @click="handleEdit(scope.row.id)"
+              class="edit-btn"
+            >
+              <el-icon><Edit /></el-icon>编辑
+            </el-button>
+            <el-button
+              v-if="hasPermission('delete')"
+              type="danger"
+              size="small"
+              @click="handleDelete(scope.row.id)"
+              class="delete-btn"
+            >
+              <el-icon><Delete /></el-icon>删除
+            </el-button>
+          </div>
         </template>
       </el-table-column>
     </el-table>
@@ -197,16 +202,132 @@ const handleCurrentChange = (page: number) => {
 <style scoped>
 .base-table-container {
   background-color: white;
-  border-radius: 4px;
-  padding: 15px;
-  box-shadow: 0 2px 12px 0 rgba(0, 0, 0, 0.1);
+  border-radius: 8px;
+  padding: 24px;
+  box-shadow: 0 2px 12px 0 rgba(0, 0, 0, 0.05);
+  transition: all 0.3s ease;
   overflow-x: auto;
 }
 
+.base-table-container:hover {
+  box-shadow: 0 4px 16px 0 rgba(0, 0, 0, 0.08);
+}
+
+/* 表格头部 */
+.table-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 24px;
+  padding-bottom: 16px;
+  border-bottom: 2px solid #f0f2f5;
+}
+
+.header-left {
+  display: flex;
+  gap: 16px;
+  align-items: center;
+  flex-wrap: wrap;
+}
+
+.header-right {
+  display: flex;
+  gap: 16px;
+  flex-wrap: wrap;
+}
+
+/* 按钮样式 */
+.el-button {
+  border-radius: 6px;
+  transition: all 0.3s ease;
+  font-weight: 500;
+  padding: 8px 16px;
+}
+
+/* 操作按钮 */
+.operation-buttons {
+  display: flex;
+  gap: 8px;
+}
+
+.view-btn {
+  background-color: #409eff;
+  border-color: #409eff;
+}
+
+.view-btn:hover {
+  background-color: #66b1ff;
+  border-color: #66b1ff;
+  transform: translateY(-1px);
+  box-shadow: 0 2px 8px rgba(64, 158, 255, 0.4);
+}
+
+.edit-btn {
+  background-color: #e6a23c;
+  border-color: #e6a23c;
+}
+
+.edit-btn:hover {
+  background-color: #ebb563;
+  border-color: #ebb563;
+  transform: translateY(-1px);
+  box-shadow: 0 2px 8px rgba(230, 162, 60, 0.4);
+}
+
+.delete-btn {
+  background-color: #f56c6c;
+  border-color: #f56c6c;
+}
+
+.delete-btn:hover {
+  background-color: #f78989;
+  border-color: #f78989;
+  transform: translateY(-1px);
+  box-shadow: 0 2px 8px rgba(245, 108, 108, 0.4);
+}
+
+/* 分页样式 */
+.table-pagination {
+  margin-top: 24px;
+  display: flex;
+  justify-content: flex-end;
+  padding-top: 16px;
+  border-top: 2px solid #f0f2f5;
+}
+
+.pagination {
+  --el-pagination-button-bg-color: #f5f7fa;
+  --el-pagination-button-border-color: #dcdfe6;
+  --el-pagination-button-text-color: #606266;
+  --el-pagination-button-hover-bg-color: #ecf5ff;
+  --el-pagination-button-hover-border-color: #c6e2ff;
+  --el-pagination-button-hover-text-color: #409eff;
+  --el-pagination-button-active-bg-color: #409eff;
+  --el-pagination-button-active-border-color: #409eff;
+  --el-pagination-button-active-text-color: #fff;
+}
+
 /* 响应式设计 */
+@media (max-width: 1200px) {
+  .search-box .el-input {
+    width: 250px;
+  }
+  
+  .table-header {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 16px;
+  }
+  
+  .header-right {
+    width: 100%;
+    justify-content: flex-start;
+  }
+}
+
 @media (max-width: 768px) {
   .base-table-container {
-    padding: 10px;
+    padding: 16px;
   }
   
   .table-header {
@@ -248,11 +369,20 @@ const handleCurrentChange = (page: number) => {
   .el-icon {
     font-size: 12px;
   }
+  
+  .operation-buttons {
+    flex-direction: column;
+    gap: 6px;
+  }
+  
+  .operation-buttons .el-button {
+    width: 100%;
+  }
 }
 
 @media (max-width: 576px) {
   .base-table-container {
-    padding: 5px;
+    padding: 10px;
   }
   
   .table-header {
@@ -279,24 +409,6 @@ const handleCurrentChange = (page: number) => {
   .el-button--small {
     padding: 2px 6px;
   }
-}
-
-.table-header {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  margin-bottom: 20px;
-}
-
-.header-left {
-  display: flex;
-  gap: 10px;
-  align-items: center;
-}
-
-.header-right {
-  display: flex;
-  gap: 10px;
 }
 
 .table-pagination {
