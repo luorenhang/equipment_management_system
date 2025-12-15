@@ -3,7 +3,6 @@ package edu.ngd.order.equipment.service;
 import edu.ngd.order.equipment.entity.User;
 import edu.ngd.order.equipment.mapper.UserMapper;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
 /**
@@ -14,9 +13,6 @@ public class UserService {
     
     @Autowired
     private UserMapper userMapper;
-    
-    // 密码加密器
-    private final BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
     
     /**
      * 用户注册
@@ -36,9 +32,7 @@ public class UserService {
             return false;
         }
         
-        // 密码加密
-        String encodedPassword = passwordEncoder.encode(user.getPassword());
-        user.setPassword(encodedPassword);
+
         
         // 设置创建人和修改人
         user.setCreator(user.getUsername());
@@ -62,7 +56,7 @@ public class UserService {
         }
         
         // 验证密码
-        if (passwordEncoder.matches(password, user.getPassword())) {
+        if (password.equals(user.getPassword())) {
             return user;
         }
         

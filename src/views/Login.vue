@@ -103,17 +103,13 @@ const handleLogin = async () => {
   if (valid) {
     loading.value = true
     try {
-      const response = await loginApi(loginForm)
+      const data = await loginApi(loginForm)
       // axios拦截器已经处理了response，直接返回了data
-      const data = response as unknown as LoginResponse
-      if (data.success) {
-        const { token, userInfo } = data
-        userStore.login(token, userInfo)
-        ElMessage.success('登录成功')
-        router.push('/equipment')
-      } else {
-        ElMessage.error(data.message || '登录失败')
-      }
+      // 成功时data包含token和userInfo
+      const { token, userInfo } = data
+      userStore.login(token, userInfo)
+      ElMessage.success('登录成功')
+      router.push('/equipment')
     } catch (error: any) {
       ElMessage.error(error.message || '登录失败，请稍后重试')
     } finally {

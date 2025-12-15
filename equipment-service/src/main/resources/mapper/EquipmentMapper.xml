@@ -16,7 +16,7 @@
     
     <!-- 基础字段列表 -->
     <sql id="Base_Column_List">
-        ID, StorageLocation, EquipmentName, EquipmentNumber, ProductionLine, Status, DeviceType, EquipmentStatus
+        ID,StorageLocation, EquipmentName, EquipmentNumber, ProductionLine, Status, DeviceType, EquipmentStatus
     </sql>
     
     <!-- 插入语句 -->

@@ -8,9 +8,6 @@
         <result column="password" property="password" jdbcType="VARCHAR" />
         <result column="email" property="email" jdbcType="VARCHAR" />
         <result column="create_time" property="createTime" jdbcType="TIMESTAMP" />
-        <result column="creator" property="creator" jdbcType="VARCHAR" />
-        <result column="last_update_time" property="lastUpdateTime" jdbcType="TIMESTAMP" />
-        <result column="modifier" property="modifier" jdbcType="VARCHAR" />
     </resultMap>
     
     <!-- 新增用户 -->
@@ -19,18 +16,12 @@
             username,
             password,
             email,
-            create_time,
-            creator,
-            last_update_time,
-            modifier
+            create_time
         ) VALUES (
             #{username,jdbcType=VARCHAR},
             #{password,jdbcType=VARCHAR},
             #{email,jdbcType=VARCHAR},
-            NOW(),
-            #{creator,jdbcType=VARCHAR},
-            NOW(),
-            #{modifier,jdbcType=VARCHAR}
+            NOW()
         )
     </insert>
     
@@ -44,9 +35,7 @@
         UPDATE user SET
             username = #{username,jdbcType=VARCHAR},
             password = #{password,jdbcType=VARCHAR},
-            email = #{email,jdbcType=VARCHAR},
-            last_update_time = NOW(),
-            modifier = #{modifier,jdbcType=VARCHAR}
+            email = #{email,jdbcType=VARCHAR}
         WHERE id = #{id,jdbcType=INTEGER}
     </update>
     
@@ -57,10 +46,7 @@
             username,
             password,
             email,
-            create_time,
-            creator,
-            last_update_time,
-            modifier
+            create_time
         FROM user
         WHERE id = #{id,jdbcType=INTEGER}
     </select>
@@ -72,10 +58,7 @@
             username,
             password,
             email,
-            create_time,
-            creator,
-            last_update_time,
-            modifier
+            create_time
         FROM user
         WHERE username = #{username,jdbcType=VARCHAR}
     </select>
@@ -87,10 +70,7 @@
             username,
             password,
             email,
-            create_time,
-            creator,
-            last_update_time,
-            modifier
+            create_time
         FROM user
         WHERE email = #{email,jdbcType=VARCHAR}
     </select>
@@ -102,10 +82,7 @@
             username,
             password,
             email,
-            create_time,
-            creator,
-            last_update_time,
-            modifier
+            create_time
         FROM user
     </select>
 </mapper>

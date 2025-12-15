@@ -15,6 +15,11 @@ axiosInstance.interceptors.request.use(
       config.headers.Authorization = `Bearer ${token}`
     }
     
+    // 设置默认Content-Type
+    if (!config.headers['Content-Type']) {
+      config.headers['Content-Type'] = 'application/json'
+    }
+    
     console.log('API请求详情：')
     console.log('请求地址:', config.url)
     console.log('请求方法:', config.method)
