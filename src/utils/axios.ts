@@ -7,9 +7,14 @@ const axiosInstance = axios.create({
 })
 
 // 请求拦截器
-// 请求拦截器
 axiosInstance.interceptors.request.use(
   config => {
+    // 添加Authorization头
+    const token = localStorage.getItem('token')
+    if (token) {
+      config.headers.Authorization = `Bearer ${token}`
+    }
+    
     console.log('API请求详情：')
     console.log('请求地址:', config.url)
     console.log('请求方法:', config.method)
@@ -62,19 +67,33 @@ axiosInstance.interceptors.response.use(
       console.error('响应状态:', status)
       console.error('响应数据:', data)
       
-      // 尝试从响应数据中获取错误信息
-      if (typeof data === 'object' && data !== null) {
-        if ('message' in data) {
-          errorMessage = data.message
-        } else if ('msg' in data) {
-          errorMessage = data.msg
-        } else if ('error' in data) {
-          errorMessage = data.error
+      // 处理认证错误
+      if (status === 401 || status === 403) {
+        // 清除本地存储的token和用户信息
+        localStorage.removeItem('token')
+        localStorage.removeItem('userInfo')
+        
+        // 跳转到登录页面（延迟执行，避免阻塞当前错误处理）
+        setTimeout(() => {
+          window.location.href = '/login'
+        }, 100)
+        
+        errorMessage = '登录已过期，请重新登录'
+      } else {
+        // 尝试从响应数据中获取错误信息
+        if (typeof data === 'object' && data !== null) {
+          if ('message' in data) {
+            errorMessage = data.message
+          } else if ('msg' in data) {
+            errorMessage = data.msg
+          } else if ('error' in data) {
+            errorMessage = data.error
+          } else {
+            errorMessage = `请求失败，HTTP状态码：${status}`
+          }
         } else {
           errorMessage = `请求失败，HTTP状态码：${status}`
         }
-      } else {
-        errorMessage = `请求失败，HTTP状态码：${status}`
       }
     } else if (error.request) {
       // 请求已发出，但没有收到响应

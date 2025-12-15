@@ -69,6 +69,12 @@ spring:
             - Path=/api/repair/**
           filters:
             - StripPrefix=0
+        - id: equipment-service-user
+          uri: lb://equipment-service
+          predicates:
+            - Path=/api/user/**
+          filters:
+            - StripPrefix=0
 
 logging:
   level:

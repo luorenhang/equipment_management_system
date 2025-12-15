@@ -3,24 +3,25 @@
     <!-- 表格头部 -->
     <div class="table-header">
       <div class="header-left">
-        <el-input
-          v-model="searchQuery"
-          placeholder="请输入设备名称或编号"
-          clearable
-          :prefix-icon="Search"
-          style="width: 300px"
-          @keyup.enter="handleSearch"
-        />
-        <el-button type="primary" @click="handleSearch">
-          <el-icon><Search /></el-icon>搜索
-        </el-button>
-        <el-button type="primary" @click="handleCreate">
+        <div class="search-box">
+          <el-input
+            v-model="searchQuery"
+            placeholder="请输入设备名称或编号"
+            clearable
+            :prefix-icon="Search"
+            @keyup.enter="handleSearch"
+          />
+          <el-button type="primary" @click="handleSearch" class="search-btn">
+            <el-icon><Search /></el-icon>搜索
+          </el-button>
+        </div>
+        <el-button type="primary" @click="handleCreate" class="create-btn">
           <el-icon><Plus /></el-icon>新增
         </el-button>
       </div>
       <div class="header-right">
         <el-dropdown v-if="selectedIds.length > 0">
-          <el-button type="warning">
+          <el-button type="warning" class="batch-btn">
             <el-icon><More /></el-icon>批量操作 <el-icon class="el-icon--right"><ArrowDown /></el-icon>
           </el-button>
           <template #dropdown>
@@ -38,61 +39,75 @@
       :data="equipmentList"
       stripe
       @selection-change="handleSelectionChange"
+      class="equipment-table"
+      :row-class-name="tableRowClassName"
+      style="width: 100%"
     >
       <el-table-column type="selection" width="55" />
       <el-table-column prop="id" label="ID" width="80" />
-      <el-table-column prop="equipmentName" label="设备名称" min-width="150" />
-      <el-table-column prop="equipmentNumber" label="设备编号" min-width="150" />
-      <el-table-column prop="storageLocation" label="存放地点" min-width="120" />
-      <el-table-column prop="productionLine" label="产线" min-width="120" />
-      <el-table-column prop="deviceType" label="设备类型" min-width="120" />
-      <el-table-column prop="equipmentStatus" label="设备状态" min-width="100">
+      <el-table-column prop="equipmentName" label="设备名称" min-width="180">
+        <template #default="scope">
+          <div class="equipment-name">{{ scope.row.equipmentName }}</div>
+        </template>
+      </el-table-column>
+      <el-table-column prop="equipmentNumber" label="设备编号" min-width="180" />
+      <el-table-column prop="storageLocation" label="存放地点" min-width="150" />
+      <el-table-column prop="productionLine" label="产线" min-width="150" />
+      <el-table-column prop="deviceType" label="设备类型" min-width="150" />
+      <el-table-column prop="equipmentStatus" label="设备状态" min-width="120">
         <template #default="scope">
           <el-tag
             :type="
               scope.row.equipmentStatus === '运行中' ? 'success' :
               scope.row.equipmentStatus === '待机' ? 'info' : 'danger'
             "
+            size="large"
           >
             {{ scope.row.equipmentStatus }}
           </el-tag>
         </template>
       </el-table-column>
-      <el-table-column prop="status" label="状态" min-width="100">
+      <el-table-column prop="status" label="状态" min-width="120">
         <template #default="scope">
           <el-tag
             :type="
               scope.row.status === '正常' ? 'success' :
               scope.row.status === '维修中' ? 'warning' : 'danger'
             "
+            size="large"
           >
             {{ scope.row.status }}
           </el-tag>
         </template>
       </el-table-column>
-      <el-table-column label="操作" width="200" fixed="right">
+      <el-table-column label="操作" width="240" fixed="right">
         <template #default="scope">
-          <el-button
-            type="primary"
-            size="small"
-            @click="handleView(scope.row.id)"
-          >
-            <el-icon><View /></el-icon>查看
-          </el-button>
-          <el-button
-            type="warning"
-            size="small"
-            @click="handleEdit(scope.row.id)"
-          >
-            <el-icon><Edit /></el-icon>编辑
-          </el-button>
-          <el-button
-            type="danger"
-            size="small"
-            @click="handleDelete(scope.row.id)"
-          >
-            <el-icon><Delete /></el-icon>删除
-          </el-button>
+          <div class="operation-buttons">
+            <el-button
+              type="primary"
+              size="small"
+              @click="handleView(scope.row.id)"
+              class="view-btn"
+            >
+              <el-icon><View /></el-icon>查看
+            </el-button>
+            <el-button
+              type="warning"
+              size="small"
+              @click="handleEdit(scope.row.id)"
+              class="edit-btn"
+            >
+              <el-icon><Edit /></el-icon>编辑
+            </el-button>
+            <el-button
+              type="danger"
+              size="small"
+              @click="handleDelete(scope.row.id)"
+              class="delete-btn"
+            >
+              <el-icon><Delete /></el-icon>删除
+            </el-button>
+          </div>
         </template>
       </el-table-column>
     </el-table>
@@ -107,6 +122,8 @@
         :total="pagination.total"
         @size-change="handleSizeChange"
         @current-change="handleCurrentChange"
+        background
+        class="pagination"
       />
     </div>
   </div>
@@ -185,37 +202,269 @@ const handleSizeChange = (size: number) => {
 const handleCurrentChange = (page: number) => {
   emit('current-change', page)
 }
+
+// 表格行样式
+const tableRowClassName = () => {
+  return 'table-row'
+}
 </script>
 
 <style scoped>
 .equipment-table-container {
   background-color: white;
-  border-radius: 4px;
-  padding: 20px;
-  box-shadow: 0 2px 12px 0 rgba(0, 0, 0, 0.1);
+  border-radius: 8px;
+  padding: 24px;
+  box-shadow: 0 2px 12px 0 rgba(0, 0, 0, 0.05);
+  transition: all 0.3s ease;
 }
 
+.equipment-table-container:hover {
+  box-shadow: 0 4px 16px 0 rgba(0, 0, 0, 0.08);
+}
+
+/* 表格头部 */
 .table-header {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  margin-bottom: 20px;
+  margin-bottom: 24px;
+  padding-bottom: 16px;
+  border-bottom: 2px solid #f0f2f5;
 }
 
 .header-left {
+  display: flex;
+  gap: 16px;
+  align-items: center;
+  flex-wrap: wrap;
+}
+
+.search-box {
   display: flex;
   gap: 10px;
   align-items: center;
 }
 
-.header-right {
-  display: flex;
-  gap: 10px;
+.search-box .el-input {
+  width: 320px;
 }
 
+.header-right {
+  display: flex;
+  gap: 16px;
+  flex-wrap: wrap;
+}
+
+/* 按钮样式 */
+.el-button {
+  border-radius: 6px;
+  transition: all 0.3s ease;
+  font-weight: 500;
+  padding: 8px 16px;
+}
+
+.search-btn {
+  background-color: #409eff;
+  border-color: #409eff;
+}
+
+.search-btn:hover {
+  background-color: #66b1ff;
+  border-color: #66b1ff;
+  transform: translateY(-1px);
+  box-shadow: 0 4px 12px rgba(64, 158, 255, 0.4);
+}
+
+.create-btn {
+  background-color: #67c23a;
+  border-color: #67c23a;
+}
+
+.create-btn:hover {
+  background-color: #85ce61;
+  border-color: #85ce61;
+  transform: translateY(-1px);
+  box-shadow: 0 4px 12px rgba(103, 194, 58, 0.4);
+}
+
+.batch-btn {
+  background-color: #e6a23c;
+  border-color: #e6a23c;
+}
+
+.batch-btn:hover {
+  background-color: #ebb563;
+  border-color: #ebb563;
+  transform: translateY(-1px);
+  box-shadow: 0 4px 12px rgba(230, 162, 60, 0.4);
+}
+
+/* 表格样式 */
+.equipment-table {
+  border-radius: 8px;
+  overflow: hidden;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+  border: 1px solid #e9ecef;
+}
+
+.equipment-table::before {
+  display: none;
+}
+
+.equipment-table .el-table__header-wrapper {
+  background: linear-gradient(135deg, #f5f7fa 0%, #e9ecef 100%);
+  border-bottom: 2px solid #dee2e6;
+}
+
+.equipment-table .el-table__header-wrapper .el-table__header {
+  border: none;
+}
+
+.equipment-table .el-table__header-wrapper th {
+  background: transparent;
+  font-weight: 600;
+  color: #303133;
+  font-size: 14px;
+  padding: 12px 0;
+  border-bottom: none;
+}
+
+.table-row {
+  transition: all 0.3s ease;
+  cursor: pointer;
+}
+
+.table-row:hover {
+  background-color: #f0f5ff !important;
+}
+
+.equipment-name {
+  font-weight: 500;
+  color: #303133;
+}
+
+/* 操作按钮 */
+.operation-buttons {
+  display: flex;
+  gap: 8px;
+}
+
+.view-btn {
+  background-color: #409eff;
+  border-color: #409eff;
+}
+
+.view-btn:hover {
+  background-color: #66b1ff;
+  border-color: #66b1ff;
+  transform: translateY(-1px);
+  box-shadow: 0 2px 8px rgba(64, 158, 255, 0.4);
+}
+
+.edit-btn {
+  background-color: #e6a23c;
+  border-color: #e6a23c;
+}
+
+.edit-btn:hover {
+  background-color: #ebb563;
+  border-color: #ebb563;
+  transform: translateY(-1px);
+  box-shadow: 0 2px 8px rgba(230, 162, 60, 0.4);
+}
+
+.delete-btn {
+  background-color: #f56c6c;
+  border-color: #f56c6c;
+}
+
+.delete-btn:hover {
+  background-color: #f78989;
+  border-color: #f78989;
+  transform: translateY(-1px);
+  box-shadow: 0 2px 8px rgba(245, 108, 108, 0.4);
+}
+
+/* 标签样式 */
+.el-tag {
+  font-weight: 500;
+  padding: 4px 12px;
+  border-radius: 16px;
+}
+
+/* 分页样式 */
 .table-pagination {
-  margin-top: 20px;
+  margin-top: 24px;
   display: flex;
   justify-content: flex-end;
+  padding-top: 16px;
+  border-top: 2px solid #f0f2f5;
+}
+
+.pagination {
+  --el-pagination-button-bg-color: #f5f7fa;
+  --el-pagination-button-border-color: #dcdfe6;
+  --el-pagination-button-text-color: #606266;
+  --el-pagination-button-hover-bg-color: #ecf5ff;
+  --el-pagination-button-hover-border-color: #c6e2ff;
+  --el-pagination-button-hover-text-color: #409eff;
+  --el-pagination-button-active-bg-color: #409eff;
+  --el-pagination-button-active-border-color: #409eff;
+  --el-pagination-button-active-text-color: #fff;
+}
+
+/* 响应式设计 */
+@media (max-width: 1200px) {
+  .search-box .el-input {
+    width: 250px;
+  }
+  
+  .table-header {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 16px;
+  }
+  
+  .header-right {
+    width: 100%;
+    justify-content: flex-start;
+  }
+}
+
+@media (max-width: 768px) {
+  .equipment-table-container {
+    padding: 16px;
+  }
+  
+  .search-box .el-input {
+    width: 200px;
+  }
+  
+  .header-left {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 12px;
+  }
+  
+  .operation-buttons {
+    flex-direction: column;
+    gap: 6px;
+  }
+  
+  .operation-buttons .el-button {
+    width: 100%;
+  }
+}
+
+@media (max-width: 576px) {
+  .search-box {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 8px;
+  }
+  
+  .search-box .el-input {
+    width: 100%;
+  }
 }
 </style>

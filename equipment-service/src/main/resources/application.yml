@@ -1,8 +1,17 @@
 server:
   port: 8087
+  servlet:
+    encoding:
+      charset: UTF-8
+      force: true
 spring:
   application:
     name: equipment-service
+  http:
+    encoding:
+      charset: UTF-8
+      enabled: true
+      force: true
   datasource:
     url: jdbc:mysql://localhost:3306/equipment_management_system?useSSL=false&serverTimezone=Asia/Shanghai&allowPublicKeyRetrieval=true
     username: root
@@ -11,16 +20,13 @@ spring:
   cloud:
     nacos:
       discovery:
+        enabled: true
         server-addr: localhost:8848
         username: nacos
         password: nacos
         namespace: public
       config:
-        server-addr: localhost:8848
-        username: nacos
-        password: nacos
-        namespace: public
-        file-extension: yml
+        enabled: false
 mybatis:
   mapper-locations: classpath:mapper/*.xml
   type-aliases-package: edu.ngd.order.equipment.entity

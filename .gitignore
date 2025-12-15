@@ -6,7 +6,8 @@ yarn-debug.log*
 yarn-error.log*
 pnpm-debug.log*
 lerna-debug.log*
-
+# 忽略Java编译输出目录
+target/
 node_modules
 dist
 dist-ssr
