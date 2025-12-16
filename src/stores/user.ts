@@ -14,11 +14,25 @@ interface UserState {
  */
 export const useUserStore = defineStore('user', {
   // 状态定义
-  state: (): UserState => ({
-    token: localStorage.getItem('token'),
-    userInfo: JSON.parse(localStorage.getItem('userInfo') || 'null'),
-    isLoggedIn: !!localStorage.getItem('token')
-  }),
+  state: (): UserState => {
+    // 安全解析localStorage中的userInfo
+    let userInfo = null;
+    try {
+      const userInfoStr = localStorage.getItem('userInfo');
+      if (userInfoStr && typeof userInfoStr === 'string') {
+        userInfo = JSON.parse(userInfoStr);
+      }
+    } catch (error) {
+      console.error('解析userInfo失败:', error);
+      userInfo = null;
+    }
+    
+    return {
+      token: localStorage.getItem('token'),
+      userInfo,
+      isLoggedIn: !!localStorage.getItem('token')
+    };
+  },
 
   // Getters
   getters: {
