@@ -20,7 +20,10 @@ export const useUserStore = defineStore('user', {
     try {
       const userInfoStr = localStorage.getItem('userInfo');
       if (userInfoStr && typeof userInfoStr === 'string') {
-        userInfo = JSON.parse(userInfoStr);
+        // 排除字符串"undefined"和"null"，这些不是有效的JSON格式
+        if (userInfoStr !== 'undefined' && userInfoStr !== 'null') {
+          userInfo = JSON.parse(userInfoStr);
+        }
       }
     } catch (error) {
       console.error('解析userInfo失败:', error);
