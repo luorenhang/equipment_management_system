@@ -52,11 +52,18 @@
         SELECT <include refid="Base_Column_List" />
         FROM Cxr_Check
         <where>
-            <if test="equipmentNumber != null and equipmentNumber != ''">
-                AND EquipmentNumber LIKE CONCAT('%', #{equipmentNumber}, '%')
-            </if>
-            <if test="equipmentName != null and equipmentName != ''">
-                AND EquipmentName LIKE CONCAT('%', #{equipmentName}, '%')
+            <if test="equipmentNumber != null and equipmentNumber != '' or equipmentName != null and equipmentName != ''">
+                AND (
+                    <if test="equipmentNumber != null and equipmentNumber != ''">
+                        EquipmentNumber LIKE CONCAT('%', #{equipmentNumber}, '%')
+                    </if>
+                    <if test="equipmentNumber != null and equipmentNumber != '' and equipmentName != null and equipmentName != ''">
+                        OR
+                    </if>
+                    <if test="equipmentName != null and equipmentName != ''">
+                        EquipmentName LIKE CONCAT('%', #{equipmentName}, '%')
+                    </if>
+                )
             </if>
             <if test="checkUser != null and checkUser != ''">
                 AND CheckUser LIKE CONCAT('%', #{checkUser}, '%')
