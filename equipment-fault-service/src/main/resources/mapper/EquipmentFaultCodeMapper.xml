@@ -37,11 +37,18 @@
         SELECT <include refid="Base_Column_List" />
         FROM Cxr_EquipmentCode
         <where>
-            <if test="code != null and code != ''">
-                AND Code LIKE CONCAT('%', #{code}, '%')
-            </if>
-            <if test="codeDescribe != null and codeDescribe != ''">
-                AND CodeDescribe LIKE CONCAT('%', #{codeDescribe}, '%')
+            <if test="code != null and code != '' or codeDescribe != null and codeDescribe != ''">
+                AND (
+                    <if test="code != null and code != ''">
+                        Code LIKE CONCAT('%', #{code}, '%')
+                    </if>
+                    <if test="code != null and code != '' and codeDescribe != null and codeDescribe != ''">
+                        OR
+                    </if>
+                    <if test="codeDescribe != null and codeDescribe != ''">
+                        CodeDescribe LIKE CONCAT('%', #{codeDescribe}, '%')
+                    </if>
+                )
             </if>
             <if test="status != null">
                 AND Status = #{status}
