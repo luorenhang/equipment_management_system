@@ -147,7 +147,8 @@ const handleRegister = async () => {
       const response = await registerApi(registerData)
       // axios拦截器已经处理了response，直接返回了data
       const result = response as unknown as RegisterResponse
-      if (result.success) {
+      // 检查后端返回的code字段来判断是否成功
+      if (result.code === 200) {
         ElMessage.success('注册成功，请登录')
         router.push('/login')
       } else {

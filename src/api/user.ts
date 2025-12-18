@@ -24,15 +24,17 @@ export interface UserInfo {
 
 // 登录响应接口
 export interface LoginResponse {
-  success: boolean
+  code: number
   message: string
-  token: string
-  userInfo: UserInfo
+  data: {
+    token: string
+    userInfo: UserInfo
+  }
 }
 
 // 注册响应接口
 export interface RegisterResponse {
-  success: boolean
+  code: number
   message: string
 }
 
